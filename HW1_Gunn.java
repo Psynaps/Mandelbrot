@@ -78,7 +78,7 @@ class HW1_Gunn {
                 }
             }
         }
-        Mandelbrot m = new Mandelbrot(0.0, 0.0, 1.0E20, 500, 500, "smooth", 4.0);
+        Mandelbrot m = new Mandelbrot(centerReal, centerImaginary, bail, iters, size, "member", width );
         m.draw();
     }
 

@@ -36,9 +36,6 @@ public class Mandelbrot {
                 this.smooth = true;
                 break;
         }    
-        System.out.println("member: " + member);
-        System.out.println("escape: "+ escape);
-        System.out.println("smooth: " + smooth);
     }
 
     // Test to see if a point in the complex plane is a member of 
@@ -82,23 +79,21 @@ public class Mandelbrot {
         return z.modulusSquared();
     }
     public void draw() {
-        System.out.println("drew1");
-
         // Dimensions of the canvas in the complex plane.
 //        double xMin = centerReal - width/2;
 //        double xMax = centerReal + width/2; //figure out what this is supposed to be
 //        double yMin = centerImaginary - width/2;
 //        double yMax = centerImaginary + width/2;
-        double xMin = -2.0;
-        double xMax = +1.0;
-        double yMin = -1.0;
-        double yMax = +1.0;
+        double xMin = centerReal-width/2;
+        double xMax = centerReal+width/2;
+        double yMin = centerImaginary-width/2;
+        double yMax = centerImaginary+width/2;
         double xRange = xMax - xMin;
         double yRange = yMax - yMin;
 
         // Set the bounds of the canvas in the complex plane as
         // well as the size of the canvas in pixels.
-        StdDraw.setCanvasSize(columns, rows);
+        StdDraw.setCanvasSize(size, size);
         StdDraw.setXscale(xMin, xMax);
         StdDraw.setYscale(yMin, yMax);
         StdDraw.setPenRadius(0); // One pixel wide.
@@ -106,10 +101,10 @@ public class Mandelbrot {
         // For each pixel in the image, determine its coordinates in
         // the complex plane and check to see if it is in the Mandelbrot
         // set or not.  Paint the pixel black if it is in the set.
-        for (int row = 0; row < rows; row++) { //what should I replace rows/columns with?
-            for (int col = 0; col < columns ; col++) {
-                double re = xMin + xRange * (double) col / (double) columns; // to fix
-                double im = yMin + yRange * (double) row / (double) rows; //to fix
+        for (int row = 0; row < size; row++) { //what should I replace rows/columns with?
+            for (int col = 0; col < size ; col++) {
+                double re = xMin + xRange * (double) col / (double) size; // to fix
+                double im = yMin + yRange * (double) row / (double) size; //to fix
                 Complex z = new Complex(re, im);
 
                 
@@ -118,12 +113,9 @@ public class Mandelbrot {
                 }
                 else if (smooth){
                     int n = escapeTime(z)%256;
-                    System.out.println("n: " + n);
-                    double d = n-Math.log10(Math.abs(z.modulusSquared()))/Math.log10(z.modulusSquared());
-                    d = (n*256)%256;
-//                    d/=n;
+                    double d = (n*256)%256;
                     System.out.println(d);
-                    Color color = new Color (n, n/2, n/4);
+                    Color color = new Color ((int)d, 0, 0);
                     StdDraw.setPenColor(color);
                     StdDraw.point(re, im);
                     

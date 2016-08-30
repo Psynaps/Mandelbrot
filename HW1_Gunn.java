@@ -6,9 +6,15 @@
 
 class HW1_Gunn {
 
+<<<<<<< Updated upstream
     private static double centerReal = 0.0;
     private static double centerImaginary = 0.0;
     private static double width = 4.0;
+=======
+    private static double centerReal = Math.PI/10; //0.0
+    private static double centerImaginary = 0.0;
+    private static double width = 0.1; //4.0
+>>>>>>> Stashed changes
     private static int size = 150;
     private static int iters = 100;
     private static double bail = 1.0E15;
@@ -78,7 +84,11 @@ class HW1_Gunn {
                 }
             }
         }
+<<<<<<< Updated upstream
         Mandelbrot m = new Mandelbrot(centerReal, centerImaginary, bail, iters, size, "member", width );
+=======
+        Mandelbrot m = new Mandelbrot(centerReal, centerImaginary, bail, iters, size, "smooth", width );
+>>>>>>> Stashed changes
         m.draw();
     }
 

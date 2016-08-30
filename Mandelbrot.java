@@ -71,7 +71,11 @@ public class Mandelbrot {
     public double smoothEscapeTime(Complex x) {//smooth escape time algorithem, no banding
         Complex z = x;
         for (int i=0; i<limit; i++){
+<<<<<<< Updated upstream
             if (z.modulusSquared()<bailout){
+=======
+            if (z.modulusSquared()>bailout){
+>>>>>>> Stashed changes
                 return z.modulusSquared();
             }
             z=z.square().add(x);
@@ -112,7 +116,13 @@ public class Mandelbrot {
                     //colorize based on escapeTime returned value
                 }
                 else if (smooth){
+<<<<<<< Updated upstream
                     int n = escapeTime(z)%256;
+=======
+                    System.out.println("smoothEscapeTime: " + smoothEscapeTime(z));
+                    int n = (int)(smoothEscapeTime(z)*256%256.0);
+                    System.out.println("n: " + n);
+>>>>>>> Stashed changes
                     double d = (n*256)%256;
                     System.out.println(d);
                     Color color = new Color ((int)d, 0, 0);

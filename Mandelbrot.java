@@ -1,41 +1,56 @@
 
 import java.awt.Color;
-
-
+/*
+ *Michael Gunn
+ *HW #2
+ *9/1/16
+ */
 public class Mandelbrot {
-    private int rows = 100;
-    private int columns = 150; //testing
-    
-    
-    private int limit = 255;	// Maximum iterations for membership testing
-    private int size = 150; //number of pixels
-    private double bailout = 1E20;
-    private double centerReal = 0.0;
-    private double centerImaginary = 0.0;
-    private boolean member = false;
-    private boolean escape = false; //can replace all 3 with an enum
-    private boolean smooth = false;
-    private double width = 4.0;
-    
 
-    public Mandelbrot(double centerReal, double centerImaginary, double bailout, int iterations, int size, String member, double width) {
+    private int limit;	// Maximum iterations for membership testing
+    private int size; //number of pixels
+    private double bailout;
+    private double centerReal;
+    private double centerImaginary;
+    private boolean escape = false; //used to see which colorization to use
+    private boolean smooth = false; //^^^
+    private double width;
+    private static ColorPallete pallete = ColorPallete.GRAY; //default to gray
+
+    public static enum ColorPallete {
+        BLACK,
+        GRAY,
+        RED, 
+        GREEN,
+        BLUE
+    }
+
+    public Mandelbrot(double centerReal, double centerImaginary, double bailout, int iterations, int size, String member, double width, String pallete) {
         this.limit = iterations;
         this.bailout = bailout;
         this.centerReal = centerReal;
         this.centerImaginary = centerImaginary;
         this.size = size;
-        
-        switch (member){
-            case "member":
-                this.member = true;
-                break;
-            case "escape":
+        this.width = width;
+
+        try {
+            this.pallete = ColorPallete.valueOf(pallete);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Illegal Color");
+        }
+
+        switch (member) {
+            case "-escape":
                 this.escape = true;
                 break;
-            case "smooth":
+            case "-smooth":
                 this.smooth = true;
                 break;
-        }    
+            case "-member": //already defaults to member, so don't need to do anything
+                break;
+            default:
+                System.out.println("Illegal escape time version"); //anything but those 3 defaults to member
+        }
     }
 
     // Test to see if a point in the complex plane is a member of 
@@ -45,18 +60,19 @@ public class Mandelbrot {
     // modulus greater than 2.0, it will diverge.  Membership in the
     // set is approximated by checking that the sequence of the first
     // 100 elements of the series all have modulus <= 2.0\
-    public boolean isMember(Complex x){ //basic black and white escape calculator
+    
+    public boolean isMember(Complex x) { //basic black and white escape calculator
         Complex z = x;
-        for (int i=0; i<limit; i++){
-            if (z.modulusSquared() > 4.0){
+        for (int i = 0; i < limit; i++) {
+            if (z.modulusSquared() > 4.0) {
                 return false;
             }
             z = z.square().add(x);
         }
         return true;
     }
-    
-    public int escapeTime(Complex x) {//basic escape time that returns i. Creates banding
+
+    public int escapeTime(Complex x) {//basic escape time that returns iterations to escape
         Complex z = x;
         for (int i = 0; i < limit; i++) {
             if (z.modulusSquared() > 4.0) {
@@ -68,30 +84,23 @@ public class Mandelbrot {
         return limit;//return the limit if it didn't diverge
     }
 
-    public double smoothEscapeTime(Complex x) {//smooth escape time algorithem, no banding
+    public double smoothEscapeTime(Complex x) {//smooth escape time algorithem
         Complex z = x;
-        for (int i=0; i<limit; i++){
-<<<<<<< Updated upstream
-            if (z.modulusSquared()<bailout){
-=======
-            if (z.modulusSquared()>bailout){
->>>>>>> Stashed changes
+        for (int i = 0; i < limit; i++) {
+            if (z.modulusSquared() > bailout) {
                 return z.modulusSquared();
             }
-            z=z.square().add(x);
+            z = z.square().add(x);
         }
         return z.modulusSquared();
     }
+
     public void draw() {
         // Dimensions of the canvas in the complex plane.
-//        double xMin = centerReal - width/2;
-//        double xMax = centerReal + width/2; //figure out what this is supposed to be
-//        double yMin = centerImaginary - width/2;
-//        double yMax = centerImaginary + width/2;
-        double xMin = centerReal-width/2;
-        double xMax = centerReal+width/2;
-        double yMin = centerImaginary-width/2;
-        double yMax = centerImaginary+width/2;
+        double xMin = centerReal - width / 2;
+        double xMax = centerReal + width / 2;
+        double yMin = centerImaginary - width / 2;
+        double yMax = centerImaginary + width / 2;
         double xRange = xMax - xMin;
         double yRange = yMax - yMin;
 
@@ -106,32 +115,68 @@ public class Mandelbrot {
         // the complex plane and check to see if it is in the Mandelbrot
         // set or not.  Paint the pixel black if it is in the set.
         for (int row = 0; row < size; row++) { //what should I replace rows/columns with?
-            for (int col = 0; col < size ; col++) {
+            for (int col = 0; col < size; col++) {
                 double re = xMin + xRange * (double) col / (double) size; // to fix
                 double im = yMin + yRange * (double) row / (double) size; //to fix
                 Complex z = new Complex(re, im);
-
-                
-                if (escape){
-                    //colorize based on escapeTime returned value
-                }
-                else if (smooth){
-<<<<<<< Updated upstream
-                    int n = escapeTime(z)%256;
-=======
-                    System.out.println("smoothEscapeTime: " + smoothEscapeTime(z));
-                    int n = (int)(smoothEscapeTime(z)*256%256.0);
-                    System.out.println("n: " + n);
->>>>>>> Stashed changes
-                    double d = (n*256)%256;
-                    System.out.println(d);
-                    Color color = new Color ((int)d, 0, 0);
+                Color color;
+                if (escape) { //colorize using normal escape time algorithm
+                    int n = escapeTime(z)%255;
+                    switch (pallete){ 
+                        case RED:
+                            color = new Color (((limit-n)*60)%255,0,0);
+                            break;
+                        case GREEN:
+                            color = new Color (0,((limit-n)*60)%255,0);
+                            break;
+                        case BLUE:
+                            color = new Color (0,0,((limit-n)*60)%255);
+                            break;
+                        case GRAY:
+                            color = new Color (((limit-n)*60)%255, ((limit-n)*60)%255, ((limit-n)*60)%255);
+                            break;
+                        case BLACK:
+                            if (isMember(z)){
+                                color = Color.BLACK;
+                            }
+                            else {
+                                color = Color.WHITE;
+                            }
+                            break;
+                        default:
+                            color = new Color (0, ((limit-n)*60)%255,0); //defaults to green
+                    }
                     StdDraw.setPenColor(color);
                     StdDraw.point(re, im);
                     
-                    //colorize based on smoothEscapeTime returned value
-                }
-                else {
+                } else if (smooth) {//colorize based on smoothEscapeTime algorithm
+                    int n = (int) Math.log10(smoothEscapeTime(z));
+                    n = Math.abs((n * 500) % (255)); //-j*3
+                    switch (pallete){ 
+                        case RED:
+                            color = new Color (n,0,0);
+                            break;
+                        case GREEN:
+                            color = new Color (0,n,0);
+                            break;
+                        case BLUE:
+                            color = new Color (0,0,n);
+                            break;
+                        case BLACK:
+                            if (isMember(z)){
+                                color = Color.BLACK;
+                            }
+                            else {
+                                color = Color.WHITE;
+                            }
+                            break;
+                        default:
+                            color = new Color (n,n,n); //defaults to gray 
+                    }
+                    StdDraw.setPenColor(color);
+                    StdDraw.point(re, im);
+
+                } else { //when "-member" it is always in black and white
                     if (isMember(z)) {//default case uses standard black and white colorization
                         StdDraw.point(re, im);
                     }

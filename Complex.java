@@ -1,6 +1,8 @@
-/**
- * **@MichaelGunn *Data Structures and Algorithms
-**/
+/*
+ *Michael Gunn
+ *HW #2
+ *9/1/16
+ */
 class Complex {
     private final double real;
     private final double imaginary;

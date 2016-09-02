@@ -3,25 +3,24 @@
  *HW #2
  *9/1/16
  */
-
 class HW2_Gunn {
-    private static double centerReal = 0.0; //Math.PI/10 //-.088
+    private static double centerReal = 0.0; //Math.PI/10 -.088
     private static double centerImaginary = 0.0; //0.655
-    private static double width = 4.0; //.004
+    private static double width = 4.0; //.1  .004
     private static int size = 250;
     private static int iters = 255;
     private static double bail = 1.0E15;
     private static String color = "GRAY";
     private static String member = "-member";
 
-    public static class BadIntegerException extends NumberFormatException {
+    public static final class BadIntegerException extends NumberFormatException {
 
         public BadIntegerException(int value) {
             super("Invalid value: " + value);
         }
     }
 
-    public static class BadDoubleException extends NumberFormatException {
+    public static final class BadDoubleException extends NumberFormatException {
 
         public BadDoubleException(double value) {
             super("Invalid value: " + value);
@@ -33,7 +32,7 @@ class HW2_Gunn {
             for (int i = 0; i < args.length; i++) {
                 String s = args[i];
                 try {
-                    switch (s) { 
+                    switch (s) { //each command line argument case
                         case "-re":
                             if (i < args.length - 1) {
                                 setDouble(args[i], args[i + 1]);
@@ -95,7 +94,7 @@ class HW2_Gunn {
     }
 
     /*
-     * exceptions
+     * throws exceptions
     */
     public static void setInt(String option, String arg) throws NumberFormatException {
         int input = Integer.parseInt(arg);

@@ -1,4 +1,3 @@
-
 import java.awt.Color;
 /*
  *Michael Gunn
@@ -122,18 +121,19 @@ public class Mandelbrot {
                 Color color;
                 if (escape) { //colorize using normal escape time algorithm
                     int n = escapeTime(z)%255;
+                    n=((limit-n)*60)%255;
                     switch (pallete){ 
                         case RED:
-                            color = new Color (((limit-n)*60)%255,0,0);
+                            color = new Color (n,0,0);
                             break;
                         case GREEN:
-                            color = new Color (0,((limit-n)*60)%255,0);
+                            color = new Color (0,n,0);
                             break;
                         case BLUE:
-                            color = new Color (0,0,((limit-n)*60)%255);
+                            color = new Color (0,0,n);
                             break;
                         case GRAY:
-                            color = new Color (((limit-n)*60)%255, ((limit-n)*60)%255, ((limit-n)*60)%255);
+                            color = new Color (n, n, n);
                             break;
                         case BLACK:
                             if (isMember(z)){
@@ -144,7 +144,7 @@ public class Mandelbrot {
                             }
                             break;
                         default:
-                            color = new Color (0, ((limit-n)*60)%255,0); //defaults to green
+                            color = new Color (0, n,0); //defaults to green
                     }
                     StdDraw.setPenColor(color);
                     StdDraw.point(re, im);
